@@ -15,7 +15,6 @@ $("#add-train-btn").on("click", function () {
 
     var trainName = $("#train-name-input").val().trim();
     var trainDestination = $("#destination-input").val().trim();
-    //var trainFrequency = moment($("#frequency-input").val().trim(), "mm").format("X");
     var trainFrequency = $("#frequency-input").val().trim();
     var firstArrival = moment($("#arrival-input").val().trim(), "kk:mm").format("X");
 
@@ -48,18 +47,9 @@ database.ref().on("child_added", function (childSnapshot) {
     var name = childSnapshot.val().name;
     var destination = childSnapshot.val().destination;
     var frequency = childSnapshot.val().frequency;
-    // var frequencyPretty = moment.unix(frequency).format("mm")
     var nextArrival = moment().add(frequency, "m").format("kk:mm");
-    // console.log(nextArrival);
     var arrival = childSnapshot.val().firstArrival;
     var arrivalPretty = moment.unix(arrival).format("kk:mm");
-    // console.log(arrivalPretty);
-    // var nextArrival = moment($("#frequency-input").val().trim(), "mm").diff(moment(), "minutes")
-    //var nextArrival = moment().diff(moment($("#frequency-input").val().trim(), "mm"), "minutes")
-    //console.log(nextArrival);
-    // var mosWorked = moment().diff(moment(start, "X"), "months");
-    // var billed = mosWorked * rate;
-    //console.log(billed, mosWorked)
 
     var newRow = $("<tr>").append(
         $("<td>").text(name),
@@ -67,8 +57,6 @@ database.ref().on("child_added", function (childSnapshot) {
         $("<td>").text(frequency),
         $("<td>").text(arrivalPretty),
         $("<td>").text(nextArrival)
-        // $("<td>").text("$" + rate),
-        // $("<td>").text("$" + billed)
     );
 
     $("#train-table").append(newRow);
