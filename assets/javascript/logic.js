@@ -10,21 +10,25 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
+//event handler for submitting trains
 $("#add-train-btn").on("click", function () {
     event.preventDefault();
 
+    //user input variables
     var trainName = $("#train-name-input").val().trim();
     var trainDestination = $("#destination-input").val().trim();
     var trainFrequency = $("#frequency-input").val().trim();
     var firstArrival = moment($("#arrival-input").val().trim(), "kk:mm").format("X");
 
+    //object to push to database
     var newTrain = {
         name: trainName,
         destination: trainDestination,
         frequency: trainFrequency,
         firstArrival: firstArrival
     };
-
+    
+    //push object to database
     database.ref().push(newTrain);
 
     console.log(newTrain.name);
@@ -34,16 +38,19 @@ $("#add-train-btn").on("click", function () {
 
     alert("Successfully added Train")
 
+    //reset form fields
     $("#train-name-input").val("")
     $("#destination-input").val("")
     $("#frequency-input").val("")
     $("#arrival-input").val("")
 });
 
+//on child added function
 database.ref().on("child_added", function (childSnapshot) {
 
     console.log(childSnapshot);
 
+    //database value variables
     var name = childSnapshot.val().name;
     var destination = childSnapshot.val().destination;
     var frequency = childSnapshot.val().frequency;
@@ -51,6 +58,7 @@ database.ref().on("child_added", function (childSnapshot) {
     var arrival = childSnapshot.val().firstArrival;
     var arrivalPretty = moment.unix(arrival).format("kk:mm");
 
+    //creates new row with information from database
     var newRow = $("<tr>").append(
         $("<td>").text(name),
         $("<td>").text(destination),
@@ -59,5 +67,6 @@ database.ref().on("child_added", function (childSnapshot) {
         $("<td>").text(nextArrival)
     );
 
+    //appends new row to table
     $("#train-table").append(newRow);
 });
